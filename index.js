@@ -4,7 +4,7 @@ const template = document.querySelector("#template");
 const fragment = document.createDocumentFragment();
 const btnBotones = document.querySelectorAll(".card .btn");
 
-const carritoObj = {};
+const carritoObj = [];
 
 const agregarCarrito = (e) => {
   console.log(e.target.dataset.fruta);
@@ -14,21 +14,23 @@ const agregarCarrito = (e) => {
     id: e.target.dataset.fruta,
     cantidad: 1,
   };
-  //   sumar la cantidad cuando damos click a add
-  // si tiene el mismo titulo o cantidad  entonces
-  if (carritoObj.hasOwnProperty(producto.titulo)) {
-    producto.cantidad = carritoObj[producto.titulo].cantidad + 1;
-    // se va a modificar
-  }
+  // retorna -1 para ver si se repite un elemnto y luego add un el mas
+  const indice = carritoObj.findIndex((item) => item.id === producto.id);
+  console.log(indice);
 
-  carritoObj[producto.titulo] = producto;
-  pintarCarrito(producto);
+  if (indice === -1) {
+    carritoObj.push(producto);
+  } else {
+    carritoObj[indice].cantidad++;
+  }
+  // console.log(carritoObj);
+  pintarCarrito(carritoObj);
 };
 
-const pintarCarrito = () => {
+const pintarCarrito = (array) => {
   carrito.textContent = "";
   // parte vacio - tmb funciona limpiando html
-  Object.values(carritoObj).forEach((item) => {
+  array.forEach((item) => {
     // se va a recorrer el objeto para obtrener el titulo y cantidad
     const clone = template.content.firstElementChild.cloneNode(true);
     clone.querySelector(".lead").textContent = item.titulo;
